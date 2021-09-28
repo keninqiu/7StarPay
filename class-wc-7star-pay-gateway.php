@@ -169,6 +169,7 @@ class WC_7StarPay_Gateway extends WC_Payment_Gateway {
           $ret = json_decode($json['body'], true);
           if($ret['rates'] && $ret['rates']['USD']) {
             $USDTAmount = $ret['rates']['USD'] * $orderTotal;
+            $USDTAmount = number_format($USDTAmount, 2, '.', '');
           }
         }
 
