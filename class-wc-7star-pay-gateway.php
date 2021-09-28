@@ -163,14 +163,21 @@ class WC_7StarPay_Gateway extends WC_Payment_Gateway {
         $USDTAmount = $orderTotal;
         if($currency != 'USD') {
 
-          $url = 'https://api.frankfurter.app/latest?from=' . $currency . '&to=USD';
-          $json = $this->do_get_request($url);
-      
-          $ret = json_decode($json['body'], true);
-          if($ret['rates'] && $ret['rates']['USD']) {
-            $USDTAmount = $ret['rates']['USD'] * $orderTotal;
-            $USDTAmount = number_format($USDTAmount, 2, '.', '');
-          }
+            try {
+                $url = 'https://api.frankfurter.app/latest?from=' . $currency . '&to=USD';
+                $json = $this->do_get_request($url);
+            
+                $ret = json_decode($json['body'], true);
+                if($ret['rates'] && $ret['rates']['USD']) {
+                    $USDTAmount = $ret['rates']['USD'] * $orderTotal;
+                    $USDTAmount = number_format($USDTAmount, 2, '.', '');
+                }
+            } catch (Exception $e) {
+ ?>
+                <p>Your currency is not supported with 7StarPay.</p>
+ <?php           
+                return;    
+            }
         }
 
         $returnUrl = $this->get_return_url( $order );
