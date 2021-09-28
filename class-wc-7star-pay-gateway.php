@@ -195,15 +195,11 @@ class WC_7StarPay_Gateway extends WC_Payment_Gateway {
                             }
                         </style>
                         <div id="code" class="codestyle"></div>
-                        <!--
-                        <script type="text/javascript" src="<?php echo C_WC_7STARPAY_URL ?>/js/jquery-3.4.1.min.js"></script> 
-                        <script type="text/javascript" src="<?php echo C_WC_7STARPAY_URL ?>/js/jquery-migrate-3.1.0.min.js"></script>
-                        -->
                         <script type="text/javascript" src="<?php echo C_WC_7STARPAY_URL ?>/js/qrcode.min.js"></script> 
                         <script type="text/javascript">
                             var qrcode = new QRCode(document.getElementById("code"), {
-                                width : 100,
-                                height : 100
+                                width : 200,
+                                height : 200
                             });                       
                             qrcode.makeCode(<?= $qrcode; ?>);
                         </script> 
