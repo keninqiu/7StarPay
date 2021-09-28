@@ -195,8 +195,8 @@ class WC_7StarPay_Gateway extends WC_Payment_Gateway {
                                 display: block;
                             }
                         </style>
-                        <div id="code" class="codestyle">
-                        <?= $qrcode; ?>
+                        <div id="code" class="codestyle" value="<?= $qrcode; ?>">
+                        
                         </div>
 
 
