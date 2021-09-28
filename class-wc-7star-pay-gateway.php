@@ -197,19 +197,15 @@ class WC_7StarPay_Gateway extends WC_Payment_Gateway {
                         </style>
                         <div id="code" class="codestyle"></div>
 
-<?php 
+                        <?php 
 
-add_action( 'wp_enqueue_scripts', function () {
+                        add_action( 'wp_enqueue_scripts', function () {
+                            $codeScript = 'var qrcode = new QRCode(document.getElementById("code"), {width : 200,height : 200});'.'qrcode.makeCode(' . $qrcode . ')';
+                            wp_add_inline_script( 'genqrcode', $codeScript );
+                        });
 
-    wp_add_inline_script( 'genqrcode', 'var qrcode = new QRCode(document.getElementById("code"), {width : 200,height : 200});' );
- });
+                        ?>
 
-?>
-
-                        <script type="text/javascript">
-                    
-                            qrcode.makeCode(<?= $qrcode; ?>);
-                        </script> 
                     </div>
                 </div>
                 <p>或者通过<a href="<?php echo $this->getPayLink($qrcodejson);?>" target="_blank">七星支付Web</a>进行支付。Or Pay with the <a href="<?php echo $this->getPayLink($qrcodejson);?>" target="_blank">7StarPay Web</a> to complete payment.</p>
