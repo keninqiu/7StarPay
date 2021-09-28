@@ -270,7 +270,7 @@ class WC_7StarPay_Gateway extends WC_Payment_Gateway {
 
         function do_get_request($url){
             $result = wp_remote_get( $url );
-            if( is_wp_error( $request ) ) {
+            if( is_wp_error( $result ) ) {
                 return false;
             }
             return $result;
