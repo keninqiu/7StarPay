@@ -54,13 +54,10 @@ class WC_7StarPay_Gateway extends WC_Payment_Gateway {
       $starpayOrderId = get_post_meta( $order->get_id(), 'starpayOrderId', true );
 
       $url = C_WC_7STARPAY_OPENAPI_HOST.'7star-payment/orderquery/'.($this->merchantId).'/'.$starpayOrderId;
- 
-  //    echo 'url='.$url;     
+    
       $json = $this->do_get_request($url);
       
- //     echo json_encode($json);
       $ret = json_decode($json['body'], true);
-echo json_encode($ret);
       if($ret['ok']) {
         $data = $ret['_body'];
         if($data[3] == 1) {
@@ -113,18 +110,18 @@ echo json_encode($ret);
         $this->form_fields['merchantId'] = $merchantId;
     }
 
-function getPayLink($qrcodejson) {
-   return C_WC_7STARPAY_WEB.'?name='.$qrcodejson['name']['en'].'&to='.$qrcodejson['to'].'&data='.$qrcodejson['data']; 
-}
+    function getPayLink($qrcodejson) {
+    return C_WC_7STARPAY_WEB.'?name='.$qrcodejson['name']['en'].'&to='.$qrcodejson['to'].'&data='.$qrcodejson['data']; 
+    }
 
-function process_payment( $order_id ) {
-        $order = new WC_Order( $order_id );
+    function process_payment( $order_id ) {
+            $order = new WC_Order( $order_id );
 
-        return array (
-            'result' => 'success',
-            'redirect' => $order->get_checkout_payment_url ( true )
-        );
-}
+            return array (
+                'result' => 'success',
+                'redirect' => $order->get_checkout_payment_url ( true )
+            );
+    }
 
     function generate_7starpay_order_id( $wp_order_id ){
         $milliseconds = number_format(round(microtime(true) * 1000), 0, '', '');
@@ -156,7 +153,7 @@ function process_payment( $order_id ) {
             $woocommerce->cart->empty_cart();
             do_action( 'woocommerce_thankyou', $order_id );
         } 
-    $this->redirect(C_WC_7STARPAY_URL.'/starpaynotifyresponse.php?orderId='.$order_id);
+        $this->redirect(C_WC_7STARPAY_URL.'/starpaynotifyresponse.php?orderId='.$order_id);
     }
 
     public function receipt_page($order_id) {
@@ -168,17 +165,17 @@ function process_payment( $order_id ) {
         if($currency == 'CAD') {
           $USDTAmount = 0.79 * $orderTotal;
         }
-$returnUrl = $this->get_return_url( $order );
+        $returnUrl = $this->get_return_url( $order );
         $starpayOrderId = $this->generate_7starpay_order_id($order_id);
         update_post_meta($order_id, 'starpayOrderId', $starpayOrderId);
-$post_data = array(
-    'orderId' => $starpayOrderId,
-    'merchantWalletAddress' => $this->merchantId,
-    'coin' => 'USDT',
-    'totalAmount' => $USDTAmount,
-    'taxAmount' => 0,
-    'notify_url' => get_site_url().'/?wc-api=wc_7starpay_notify',
-);
+        $post_data = array(
+            'orderId' => $starpayOrderId,
+            'merchantWalletAddress' => $this->merchantId,
+            'coin' => 'USDT',
+            'totalAmount' => $USDTAmount,
+            'taxAmount' => 0,
+            'notify_url' => get_site_url().'/?wc-api=wc_7starpay_notify',
+        );
         $data_json =  json_encode($post_data);
         $json = $this->do_post_request(C_WC_7STARPAY_OPENAPI_HOST.'7star-payment/qrcode', $data_json);
         $ret = json_decode($json['body'], true);
@@ -198,8 +195,10 @@ $post_data = array(
                             }
                         </style>
                         <div id="code" class="codestyle"></div>
+                        <!--
                         <script type="text/javascript" src="<?php echo C_WC_7STARPAY_URL ?>/js/jquery-3.4.1.min.js"></script> 
                         <script type="text/javascript" src="<?php echo C_WC_7STARPAY_URL ?>/js/jquery-migrate-3.1.0.min.js"></script>
+                        -->
                         <script type="text/javascript" src="<?php echo C_WC_7STARPAY_URL ?>/js/jquery.qrcode.min.js"></script> 
                         <script type="text/javascript">
                             $("#code").qrcode({ 
@@ -210,7 +209,7 @@ $post_data = array(
                         </script> 
                     </div>
                 </div>
- <p>或者通过<a href="<?php echo $this->getPayLink($qrcodejson);?>" target="_blank">七星支付Web</a>进行支付。Or Pay with the <a href="<?php echo $this->getPayLink($qrcodejson);?>" target="_blank">7StarPay Web</a> to complete payment.</p>
+                <p>或者通过<a href="<?php echo $this->getPayLink($qrcodejson);?>" target="_blank">七星支付Web</a>进行支付。Or Pay with the <a href="<?php echo $this->getPayLink($qrcodejson);?>" target="_blank">7StarPay Web</a> to complete payment.</p>
 
                 <script>
                   jQuery(document).ready(function() {
@@ -237,23 +236,23 @@ $post_data = array(
 <?php
 
 
-    }else{
-            wc_add_notice( 'Payment error:'.$ret['error'], 'error' );
-            $order->update_status('failed', $ret['error']);
-            wp_safe_redirect( wc_get_page_permalink( 'checkout' ) );
+        }else{
+                wc_add_notice( 'Payment error:'.$ret['error'], 'error' );
+                $order->update_status('failed', $ret['error']);
+                wp_safe_redirect( wc_get_page_permalink( 'checkout' ) );
+            }
+        }
+
+        function do_post_request($url, $post_data){
+            $result = wp_remote_post( $url, array( 
+                'headers' => array("Content-type" => "application/json;charset=UTF-8"),
+                'body' => $post_data ) );
+            return $result;
+        }
+
+        function do_get_request($url){
+            $result = wp_remote_get( $url );
+            return $result;
         }
     }
-
-    function do_post_request($url, $post_data){
-        $result = wp_remote_post( $url, array( 
-            'headers' => array("Content-type" => "application/json;charset=UTF-8"),
-            'body' => $post_data ) );
-        return $result;
-    }
-
-    function do_get_request($url){
-        $result = wp_remote_get( $url );
-        return $result;
-    }
-}
 ?>
