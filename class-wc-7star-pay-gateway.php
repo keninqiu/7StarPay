@@ -160,10 +160,18 @@ class WC_7StarPay_Gateway extends WC_Payment_Gateway {
         $order = new WC_Order($order_id);
         $currency = get_woocommerce_currency();
         $orderTotal = $order->get_total();
-        $USDTAmount = 0;
-        if($currency == 'CAD') {
-          $USDTAmount = 0.79 * $orderTotal;
+        $USDTAmount = $orderTotal;
+        if($currency != 'USD') {
+            
+          $url = 'https://api.frankfurter.app/latest?from=' + $currency + '&to=USD';
+          $json = $this->do_get_request($url);
+      
+          $ret = json_decode($json['body'], true);
+          if($ret['rates'] && $ret['rates']['USD']) {
+            $USDTAmount = $ret['rates']['USD'] * $orderTotal;
+          }
         }
+
         $returnUrl = $this->get_return_url( $order );
         $starpayOrderId = $this->generate_7starpay_order_id($order_id);
         update_post_meta($order_id, 'starpayOrderId', $starpayOrderId);
@@ -197,7 +205,7 @@ class WC_7StarPay_Gateway extends WC_Payment_Gateway {
                             <?php 
         function wc_7starpay_widget_enqueue_script() {
             wp_enqueue_script( 'qrcode_script', plugin_dir_url( __FILE__ ) . 'js/qrcode.min.js' );
-            $codeScript = 'alert(jQuery("#code").attr( "value" ));var qrcode = new QRCode(document.getElementById("code"), {width : 200,height : 200});'.'qrcode.makeCode(jQuery("#code").attr( "value" ))';
+            $codeScript = 'var qrcode = new QRCode(document.getElementById("code"), {width : 200,height : 200});'.'qrcode.makeCode(jQuery("#code").attr( "value" ))';
             wp_add_inline_script( 'qrcode_script', $codeScript );
         }
         add_action('wp_footer', 'wc_7starpay_widget_enqueue_script');
