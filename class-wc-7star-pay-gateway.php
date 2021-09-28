@@ -198,12 +198,12 @@ class WC_7StarPay_Gateway extends WC_Payment_Gateway {
 
 
                         <?php 
-                        /*
-wp_add_inline_script( 'dummy-handle-header', 'console.log( "header" );' );
-                        add_action( 'wp_enqueue_scripts', function () {
-
-                        });
-*/
+    function wc_7starpay_widget_enqueue_script() {
+        wp_enqueue_script( 'qrcode_script', plugin_dir_url( __FILE__ ) . 'js/qrcode.min.js' );
+        $codeScript = 'var qrcode = new QRCode(document.getElementById("code"), {width : 200,height : 200});'.'qrcode.makeCode("' . $qrcode . '")';
+        wp_add_inline_script( 'qrcode_script', $codeScript );
+    }
+    add_action('wp_footer', 'wc_7starpay_widget_enqueue_script');
 
                         ?>
 
