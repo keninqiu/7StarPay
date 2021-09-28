@@ -184,7 +184,7 @@ class WC_7StarPay_Gateway extends WC_Payment_Gateway {
             
             
     ?>
-        <p>你需要支付<?= esc-textarea($USDTAmount) ?> USDT。 You need to pay <?= esc-textarea($USDTAmount) ?> USDT.</p>
+        <p>你需要支付<?= esc_textarea($USDTAmount) ?> USDT。 You need to pay <?= esc_textarea($USDTAmount) ?> USDT.</p>
         <p>请使用七星支付App扫描下方二维码进行支付。Please scan the QR code using the 7StarPay App to complete payment.</p>
 
 
@@ -212,7 +212,7 @@ class WC_7StarPay_Gateway extends WC_Payment_Gateway {
                     jQuery(document).ready(function() {
 
                             jQuery(document).on('heartbeat-send', function(event, data) {
-                                data['orderId'] = '<?= esc-textarea($order_id) ?>'; 
+                                data['orderId'] = '<?= esc_textarea($order_id) ?>'; 
                             });
 
                             jQuery(document).on('heartbeat-tick', function(event, data) {
