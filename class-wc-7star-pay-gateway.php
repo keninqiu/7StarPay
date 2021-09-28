@@ -181,6 +181,7 @@ class WC_7StarPay_Gateway extends WC_Payment_Gateway {
         if($ret['ok']) {
         $qrcodejson = $ret['_body'];
         $qrcode = json_encode($qrcodejson);
+        echo $qrcode;
         
 ?>
       <p>你需要支付<?php echo $USDTAmount ?> USDT。 You need to pay <?php echo $USDTAmount ?> USDT.</p>
