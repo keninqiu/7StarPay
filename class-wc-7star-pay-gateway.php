@@ -158,7 +158,7 @@ class WC_7StarPay_Gateway extends WC_Payment_Gateway {
 
     public function receipt_page($order_id) {
         $order = new WC_Order($order_id);
-  
+        wp_add_inline_script( 'dummy-handle-header', 'console.log( "header" );' );
         $currency = get_woocommerce_currency();
         $orderTotal = $order->get_total();
         $USDTAmount = 0;

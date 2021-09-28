@@ -82,6 +82,8 @@
 
     function wc_7starpay_widget_enqueue_script() {   
         wp_enqueue_script( 'qrcode_script', plugin_dir_url( __FILE__ ) . 'js/qrcode.min.js' );
+        $inline_js = 'jQuery(function($){ $("a[rel^=\'prettyPhoto\']").prettyPhoto(); });';
+        wp_add_inline_script('pretty-photo', $inline_js);
     }
     add_action('wp_enqueue_scripts', 'wc_7starpay_widget_enqueue_script');
 
