@@ -172,6 +172,11 @@ class WC_7StarPay_Gateway extends WC_Payment_Gateway {
                         $USDTAmount = $ret['rates']['USD'] * $orderTotal;
                         $USDTAmount = number_format($USDTAmount, 2, '.', '');
                     }
+                } else {
+?>
+                    <p>Your currency is not supported with 7StarPay.</p>
+<?php                    
+                    return;
                 }
 
             } catch (WP_Error $e) {
@@ -265,6 +270,9 @@ class WC_7StarPay_Gateway extends WC_Payment_Gateway {
 
         function do_get_request($url){
             $result = wp_remote_get( $url );
+            if( is_wp_error( $request ) ) {
+                return false;
+            }
             return $result;
         }
     }
