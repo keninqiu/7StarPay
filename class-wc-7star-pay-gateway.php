@@ -162,8 +162,8 @@ class WC_7StarPay_Gateway extends WC_Payment_Gateway {
         $orderTotal = $order->get_total();
         $USDTAmount = $orderTotal;
         if($currency != 'USD') {
-            
-          $url = 'https://api.frankfurter.app/latest?from=' + $currency + '&to=USD';
+
+          $url = 'https://api.frankfurter.app/latest?from=' . $currency . '&to=USD';
           $json = $this->do_get_request($url);
       
           $ret = json_decode($json['body'], true);
