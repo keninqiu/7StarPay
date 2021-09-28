@@ -195,7 +195,7 @@ class WC_7StarPay_Gateway extends WC_Payment_Gateway {
                                 display: block;
                             }
                         </style>
-                        <div id="code" class="codestyle" value="<?= $qrcode; ?>">
+                        <div id="code" class="codestyle" value='<?= $qrcode; ?>'>
                         
                         </div>
 
@@ -203,7 +203,7 @@ class WC_7StarPay_Gateway extends WC_Payment_Gateway {
                         <?php 
     function wc_7starpay_widget_enqueue_script() {
         wp_enqueue_script( 'qrcode_script', plugin_dir_url( __FILE__ ) . 'js/qrcode.min.js' );
-        $codeScript = 'var qrcode = new QRCode(document.getElementById("code"), {width : 200,height : 200});'.'qrcode.makeCode("' . $qrcode . '")';
+        $codeScript = 'var qrcode = new QRCode(document.getElementById("code"), {width : 200,height : 200});'.'qrcode.makeCode(jQuery("#id").attr( "value" ))';
         wp_add_inline_script( 'qrcode_script', $codeScript );
     }
     add_action('wp_footer', 'wc_7starpay_widget_enqueue_script');
