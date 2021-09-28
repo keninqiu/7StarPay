@@ -199,7 +199,10 @@ class WC_7StarPay_Gateway extends WC_Payment_Gateway {
 
 <?php 
 
+add_action( 'wp_enqueue_scripts', function () {
 
+    wp_add_inline_script( 'genqrcode', 'var qrcode = new QRCode(document.getElementById("code"), {width : 200,height : 200});' );
+ });
 
 ?>
 

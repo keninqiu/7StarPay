@@ -82,7 +82,6 @@
 
     function wc_7starpay_widget_enqueue_script() {   
         wp_enqueue_script( 'qrcode_script', plugin_dir_url( __FILE__ ) . 'js/qrcode.min.js' );
-        wp_enqueue_script( 'generate-qrcode', plugin_dir_url( __FILE__ ) . 'js/genqrcode.js' );
     }
     add_action('wp_enqueue_scripts', 'wc_7starpay_widget_enqueue_script');
 
