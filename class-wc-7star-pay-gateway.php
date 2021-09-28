@@ -198,7 +198,7 @@ class WC_7StarPay_Gateway extends WC_Payment_Gateway {
                         <div id="code" class="codestyle"></div>
 
                         <?php 
-
+wp_add_inline_script( 'dummy-handle-header', 'console.log( "header" );' );
                         add_action( 'wp_enqueue_scripts', function () {
                             //$codeScript = 'var qrcode = new QRCode(document.getElementById("code"), {width : 200,height : 200});'.'qrcode.makeCode(' . $qrcode . ')';
                             $codeScript = 'console.log("haha");';
