@@ -174,7 +174,7 @@ class WC_7StarPay_Gateway extends WC_Payment_Gateway {
                     }
                 }
 
-            } catch (Exception $e) {
+            } catch (WP_Error $e) {
  ?>
                 <p>Your currency is not supported with 7StarPay.</p>
  <?php           
