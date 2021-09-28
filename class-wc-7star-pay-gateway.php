@@ -184,7 +184,7 @@ class WC_7StarPay_Gateway extends WC_Payment_Gateway {
             
             
     ?>
-        <p>你需要支付<?php echo $USDTAmount ?> USDT。 You need to pay <?php echo $USDTAmount ?> USDT.</p>
+        <p>你需要支付<?= $USDTAmount ?> USDT。 You need to pay <?= $USDTAmount ?> USDT.</p>
         <p>请使用七星支付App扫描下方二维码进行支付。Please scan the QR code using the 7StarPay App to complete payment.</p>
 
 
@@ -206,21 +206,21 @@ class WC_7StarPay_Gateway extends WC_Payment_Gateway {
 
                         </div>
                     </div>
-                    <p>或者通过<a href="<?php echo $this->getPayLink($qrcodejson);?>" target="_blank">七星支付Web</a>进行支付。Or Pay with the <a href="<?php echo $this->getPayLink($qrcodejson);?>" target="_blank">7StarPay Web</a> to complete payment.</p>
+                    <p>或者通过<a href="<?= $this->getPayLink($qrcodejson);?>" target="_blank">七星支付Web</a>进行支付。Or Pay with the <a href="<?= $this->getPayLink($qrcodejson);?>" target="_blank">7StarPay Web</a> to complete payment.</p>
 
                     <script>
                     jQuery(document).ready(function() {
 
                             jQuery(document).on('heartbeat-send', function(event, data) {
-                                console.log('orderId: ' + '<?php echo $order_id ?>');
-                                data['orderId'] = '<?php echo $order_id ?>'; 
+                                console.log('orderId: ' + '<?= $order_id ?>');
+                                data['orderId'] = '<?=  $order_id ?>'; 
                             });
 
                             jQuery(document).on('heartbeat-tick', function(event, data) {
                                 if(data['status']){
                                 console.log('status: ' + data['status']);
                                     if(data['status'] === 'SUCCESS'){
-                                        window.location.replace('<?php echo $returnUrl ?>');
+                                        window.location.replace('<?= $returnUrl ?>');
                                     }
                                 }
                             });
