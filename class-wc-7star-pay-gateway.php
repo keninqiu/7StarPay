@@ -157,7 +157,6 @@ class WC_7StarPay_Gateway extends WC_Payment_Gateway {
     }
 
     public function receipt_page($order_id) {
-        wp_enqueue_script( 'theme-script', get_template_directory_uri() . '/js/qrcode.min.js');
         $order = new WC_Order($order_id);
   
         $currency = get_woocommerce_currency();
