@@ -140,9 +140,9 @@ class WC_7StarPay_Gateway extends WC_Payment_Gateway {
         //get json request notify from snappay
         $json_data = file_get_contents("php://input");
         $json_obj = json_decode($json_data, true);
-        $smartContractAdd = $json_obj['smartContractAdd'];
-        $starpayOrderId = $json_obj['orderId'];
-        $txid = $json_obj['txid'];
+        $smartContractAdd = sanitize_text_field($json_obj['smartContractAdd']);
+        $starpayOrderId = sanitize_text_field($json_obj['orderId']);
+        $txid = sanitize_text_field($json_obj['txid']);
         $order_id = $this->get_wp_order_id($starpayOrderId);
         update_post_meta($order_id, 'txid', $txid);
         $order = new WC_Order( $order_id );
@@ -168,8 +168,8 @@ class WC_7StarPay_Gateway extends WC_Payment_Gateway {
         $starpayOrderId = $this->generate_7starpay_order_id($order_id);
         update_post_meta($order_id, 'starpayOrderId', $starpayOrderId);
         $post_data = array(
-            'orderId' => $starpayOrderId,
-            'merchantWalletAddress' => $this->merchantId,
+            'orderId' => sanitize_text_field($starpayOrderId),
+            'merchantWalletAddress' => sanitize_text_field($this->merchantId),
             'coin' => 'USDT',
             'totalAmount' => $USDTAmount,
             'taxAmount' => 0,
@@ -179,62 +179,56 @@ class WC_7StarPay_Gateway extends WC_Payment_Gateway {
         $json = $this->do_post_request(C_WC_7STARPAY_OPENAPI_HOST.'7star-payment/qrcode', $data_json);
         $ret = json_decode($json['body'], true);
         if($ret['ok']) {
-        $qrcodejson = $ret['_body'];
-        $qrcode = json_encode($qrcodejson);
-        
-        
-?>
-      <p>你需要支付<?php echo $USDTAmount ?> USDT。 You need to pay <?php echo $USDTAmount ?> USDT.</p>
-       <p>请使用七星支付App扫描下方二维码进行支付。Please scan the QR code using the 7StarPay App to complete payment.</p>
+            $qrcodejson = $ret['_body'];
+            $qrcode = json_encode($qrcodejson);
+            
+            
+    ?>
+        <p>你需要支付<?php echo $USDTAmount ?> USDT。 You need to pay <?php echo $USDTAmount ?> USDT.</p>
+        <p>请使用七星支付App扫描下方二维码进行支付。Please scan the QR code using the 7StarPay App to complete payment.</p>
 
 
-                <div>
-                    <div style="display: inline-block; margin: 0;">
-                         <style type="text/css">
-                            .codestyle *{
-                                display: block;
-                            }
-                        </style>
-                        <div id="code" class="codestyle" value='<?= $qrcode; ?>'>
-                        
+                    <div>
+                        <div style="display: inline-block; margin: 0;">
+
+                            <div id="code" class="codestyle" value='<?= $qrcode; ?>'></div>
+
+
+                            <?php 
+        function wc_7starpay_widget_enqueue_script() {
+            wp_enqueue_script( 'qrcode_script', plugin_dir_url( __FILE__ ) . 'js/qrcode.min.js' );
+            $codeScript = 'alert(jQuery("#code").attr( "value" ));var qrcode = new QRCode(document.getElementById("code"), {width : 200,height : 200});'.'qrcode.makeCode(jQuery("#code").attr( "value" ))';
+            wp_add_inline_script( 'qrcode_script', $codeScript );
+        }
+        add_action('wp_footer', 'wc_7starpay_widget_enqueue_script');
+
+                            ?>
+
                         </div>
-
-
-                        <?php 
-    function wc_7starpay_widget_enqueue_script() {
-        wp_enqueue_script( 'qrcode_script', plugin_dir_url( __FILE__ ) . 'js/qrcode.min.js' );
-        $codeScript = 'alert(jQuery("#code").attr( "value" ));var qrcode = new QRCode(document.getElementById("code"), {width : 200,height : 200});'.'qrcode.makeCode(jQuery("#code").attr( "value" ))';
-        wp_add_inline_script( 'qrcode_script', $codeScript );
-    }
-    add_action('wp_footer', 'wc_7starpay_widget_enqueue_script');
-
-                        ?>
-
                     </div>
-                </div>
-                <p>或者通过<a href="<?php echo $this->getPayLink($qrcodejson);?>" target="_blank">七星支付Web</a>进行支付。Or Pay with the <a href="<?php echo $this->getPayLink($qrcodejson);?>" target="_blank">7StarPay Web</a> to complete payment.</p>
+                    <p>或者通过<a href="<?php echo $this->getPayLink($qrcodejson);?>" target="_blank">七星支付Web</a>进行支付。Or Pay with the <a href="<?php echo $this->getPayLink($qrcodejson);?>" target="_blank">7StarPay Web</a> to complete payment.</p>
 
-                <script>
-                  jQuery(document).ready(function() {
+                    <script>
+                    jQuery(document).ready(function() {
 
-                        jQuery(document).on('heartbeat-send', function(event, data) {
-                            console.log('orderId: ' + '<?php echo $order_id ?>');
-                            data['orderId'] = '<?php echo $order_id ?>'; 
-                        });
+                            jQuery(document).on('heartbeat-send', function(event, data) {
+                                console.log('orderId: ' + '<?php echo $order_id ?>');
+                                data['orderId'] = '<?php echo $order_id ?>'; 
+                            });
 
-                        jQuery(document).on('heartbeat-tick', function(event, data) {
-                            if(data['status']){
-                               console.log('status: ' + data['status']);
-                                if(data['status'] === 'SUCCESS'){
-                                    window.location.replace('<?php echo $returnUrl ?>');
+                            jQuery(document).on('heartbeat-tick', function(event, data) {
+                                if(data['status']){
+                                console.log('status: ' + data['status']);
+                                    if(data['status'] === 'SUCCESS'){
+                                        window.location.replace('<?php echo $returnUrl ?>');
+                                    }
                                 }
-                            }
-                        });
+                            });
 
-                        // set the heartbeat interval
-                        wp.heartbeat.interval( 'fast' );
-                    });     
-                </script>
+                            // set the heartbeat interval
+                            wp.heartbeat.interval( 'fast' );
+                        });     
+                    </script>
 
 <?php
 
