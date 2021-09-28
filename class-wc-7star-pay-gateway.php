@@ -55,7 +55,7 @@ class WC_7StarPay_Gateway extends WC_Payment_Gateway {
 
       $url = C_WC_7STARPAY_OPENAPI_HOST.'7star-payment/orderquery/'.($this->merchantId).'/'.$starpayOrderId;
     
-      $json = $this->do_get_request($url);
+      $json = $this->do_get_request(esc_url($url));
       
       $ret = json_decode($json['body'], true);
       if($ret['ok']) {
@@ -165,7 +165,7 @@ class WC_7StarPay_Gateway extends WC_Payment_Gateway {
 
             try {
                 $url = 'https://api.frankfurter.app/latest?from=' . $currency . '&to=USD';
-                $json = $this->do_get_request($url);
+                $json = $this->do_get_request(esc_url($url));
                 if($json && $json['body']) {
                     $ret = json_decode($json['body'], true);
                     if($ret['rates'] && $ret['rates']['USD']) {
@@ -199,7 +199,8 @@ class WC_7StarPay_Gateway extends WC_Payment_Gateway {
             'notify_url' => get_site_url().'/?wc-api=wc_7starpay_notify',
         );
         $data_json =  json_encode($post_data);
-        $json = $this->do_post_request(C_WC_7STARPAY_OPENAPI_HOST.'7star-payment/qrcode', $data_json);
+        $url = C_WC_7STARPAY_OPENAPI_HOST.'7star-payment/qrcode';
+        $json = $this->do_post_request(esc_url($url), $data_json);
         $ret = json_decode($json['body'], true);
         if($ret['ok']) {
             $qrcodejson = $ret['_body'];
