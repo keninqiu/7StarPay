@@ -208,14 +208,14 @@ class WC_7StarPay_Gateway extends WC_Payment_Gateway {
             
             
     ?>
-        <p>你需要支付<?= esc_textarea($USDTAmount) ?> USDT。 You need to pay <?= esc_textarea($USDTAmount) ?> USDT.</p>
+        <p>你需要支付<?php echo esc_textarea($USDTAmount) ?> USDT。 You need to pay <?php echo esc_textarea($USDTAmount) ?> USDT.</p>
         <p>请使用七星支付App扫描下方二维码进行支付。Please scan the QR code using the 7StarPay App to complete payment.</p>
 
 
                     <div>
                         <div style="display: inline-block; margin: 0;">
 
-                            <div id="code" class="codestyle" value='<?= esc_attr($qrcode); ?>'></div>
+                            <div id="code" class="codestyle" value='<?php echo esc_attr($qrcode); ?>'></div>
 
 
                             <?php 
@@ -230,19 +230,19 @@ class WC_7StarPay_Gateway extends WC_Payment_Gateway {
 
                         </div>
                     </div>
-                    <p>或者通过<a href="<?= esc_url($this->getPayLink($qrcodejson));?>" target="_blank">七星支付Web</a>进行支付。Or Pay with the <a href="<?= esc_url($this->getPayLink($qrcodejson));?>" target="_blank">7StarPay Web</a> to complete payment.</p>
+                    <p>或者通过<a href="<?php echo esc_url($this->getPayLink($qrcodejson));?>" target="_blank">七星支付Web</a>进行支付。Or Pay with the <a href="<?php echo esc_url($this->getPayLink($qrcodejson));?>" target="_blank">7StarPay Web</a> to complete payment.</p>
 
                     <script>
                     jQuery(document).ready(function() {
 
                             jQuery(document).on('heartbeat-send', function(event, data) {
-                                data['orderId'] = '<?= esc_textarea($order_id) ?>'; 
+                                data['orderId'] = '<?php echo esc_textarea($order_id) ?>'; 
                             });
 
                             jQuery(document).on('heartbeat-tick', function(event, data) {
                                 if(data['status']){
                                     if(data['status'] === 'SUCCESS'){
-                                        window.location.replace('<?= esc_url($returnUrl) ?>');
+                                        window.location.replace('<?php echo esc_url($returnUrl) ?>');
                                     }
                                 }
                             });
