@@ -2,7 +2,7 @@
 Contributors: 7StarPay
 Tags: 7StarPay, crypto currency payment, woocommerce
 Requires at least: 4.0
-Tested up to: 5.7
+Tested up to: 5.8.1
 Stable tag: 2.3.2
 License: GPL2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
