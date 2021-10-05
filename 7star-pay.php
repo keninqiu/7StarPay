@@ -32,7 +32,7 @@
     define('C_WC_7STARPAY_URL',rtrim(plugin_dir_url(__FILE__),'/'));
 
     define('C_WC_7STARPAY_OPENAPI_HOST','https://api.blockchaingate.com/v2/');
-    define('C_WC_7STARPAY_WEB', 'https://www.madearn.com/wallet/bindpay');
+    define('C_WC_7STARPAY_WEB', 'https://www.7starpay.com/wallet/starpay');
     add_action( 'plugins_loaded', 'init_7star_pay_gateway_class' );
 
     function init_7star_pay_gateway_class() {
